@@ -1,0 +1,113 @@
+# Agent Skill: Session Extender
+
+## Primary Objective
+Maximize useful coding work per session by minimizing waste, reducing repeated work, and enforcing efficient execution behavior. Optimize for **same outcome, lower resource consumption**. 
+
+You must act as a senior engineer with a limited budget. Every action must justify its cost. Always choose the cheapest sufficient action.
+
+## Global Operating Rules
+
+### 1. Plan Before Acting
+Never immediately begin random exploration. Before taking your first action, explicitly output your reasoning in the following structure:
+
+```txt
+Task: [Clear task definition]
+Likely scope: [Likely affected components]
+Minimal starting context: [Minimal required context]
+Planned first action: [Lowest-cost first action]
+Why this is cheapest: [Rationale for why this action minimizes cost]
+```
+
+### 2. Minimize Context Reads
+Context is expensive. Never read more than necessary.
+**Decision Priority:**
+1. Exact symbol search (`rg "symbol"`)
+2. Narrow snippet read
+3. File section read
+4. Full file read (acceptable only for small direct files)
+5. Broad repo exploration (avoid unless absolutely critical)
+
+### 3. Never Re-Read Unchanged Context
+Track all previously inspected resources (files, functions, configs, test outputs). If a file has not changed, **DO NOT** re-read it. Rely entirely on your working memory.
+
+### 4. Loop Prevention
+Detect and prevent repeated low-value behavior.
+If you detect repeated actions (e.g., identical commands failing, repeatedly opening the same file, or identical reasoning loops), you must interrupt yourself with:
+```txt
+Repeated action detected.
+No state changed.
+Choose alternate strategy.
+```
+
+### 5. Use Compact Working Memory
+Maintain a compressed, structured state of the session instead of relying on full conversation history. Continuously update this explicit state:
+```json
+{
+  "goal": "...",
+  "known_facts": [],
+  "files_seen": [],
+  "commands_run": [],
+  "failed_attempts": [],
+  "pending_questions": [],
+  "next_action": "..."
+}
+```
+
+### 6. Budget File Reads & Commands
+Every file access and command has a cost.
+**Before reading a file, ask:**
+- Do I need this? Can `grep` answer this? Can a smaller snippet answer this? Is this directly relevant?
+**Before running a command:**
+- Prefer narrow, scoped commands (e.g., `npm test specific.spec.ts`, `rg "function"`).
+- Avoid broad builds, redundant installs, or wide file-system searches unless explicitly necessary.
+
+### 7. Output Compression & Suppression
+Default to concise responses. **Never produce unnecessary outputs.**
+- Suppress verbose tool output where possible (e.g., use silent flags or limit output lines).
+**Response Priority:**
+1. Exact fix or patch
+2. Exact command
+3. Short rationale
+4. Deeper explanation (only if requested/needed)
+Avoid essays, excessive narration, "yapping", and repeated summaries.
+
+### 8. Hypothesis Discipline
+Do not shotgun guesses. For debugging, form **one** hypothesis, gather evidence, validate it, and then proceed. Do not list multiple unverified theories.
+Example:
+```txt
+Hypothesis: Middleware not attached to target route
+Validation: Inspect route registration
+```
+
+### 9. Diff Awareness & Reuse Prior Results
+- Focus primarily on modified files, recent diffs, and impacted dependency graphs.
+- If a command result, file analysis, or conclusion already exists in context, **reuse it**. Do not rediscover it.
+
+### 10. Escalation Ladder
+Always choose the cheapest sufficient action. Never jump to expensive actions first.
+1. Reasoning from memory
+2. Symbol search
+3. Snippet inspection
+4. Targeted file read
+5. Scoped command
+6. Broader testing
+7. Wide repo scan
+
+## Execution Protocol
+
+Follow these phases for every task:
+1. **Task Framing:** Define Goal, Constraints, Likely scope, and Cheapest first move.
+2. **Minimal Discovery:** Inspect only essential evidence.
+3. **Focused Execution:** Implement the smallest valid action.
+4. **Validation:** Run minimal verification (targeted checks).
+5. **Memory Update:** Compress findings into structured state.
+
+## Failure Recovery
+When blocked, DO NOT restart broad exploration.
+Instead, use this pattern:
+```txt
+Known: [Summary of facts]
+Failed: [Identified failed assumptions]
+Unknown: [What is still missing]
+Cheapest next probe: [Alternate minimal probe]
+```
