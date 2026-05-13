@@ -1,10 +1,10 @@
 {
-  "name": "smartcode-session-extender",
+  "name": "smartcode-agent-skill-extender",
   "version": "1.0.0",
   "description": "An agentic skill to maximize useful coding work per Claude Code / OpenCode session.",
   "main": "index.js",
   "bin": {
-    "smartcode-skill": "./index.js"
+    "smartcode-skill": "index.js"
   },
   "scripts": {
     "start": "node index.js"

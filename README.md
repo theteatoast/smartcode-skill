@@ -13,10 +13,10 @@ An agentic skill designed for Claude Code and OpenCode to maximize useful coding
 
 You can easily install this skill into any of your projects from the terminal via `npx`. This allows anyone to inject the prompt/protocol dynamically.
 
-### Using NPX
-If the package is published to npm, run this in the root of the project where you want to use the agent:
+### Using NPX (Recommended)
+You can install this skill globally with a single command. Run this anywhere on your machine:
 ```bash
-npx smartcode-session-extender
+npx smartcode-agent-skill-extender
 ```
 
 ### Local Installation
