@@ -7,7 +7,6 @@ An agentic skill designed for Claude Code and OpenCode to maximize useful coding
 - **Context Budgeting**: Prevents large file reads and re-reading unchanged files.
 - **Output Suppression**: Enforces concise responses and suppresses verbose CLI/tool outputs (no yapping).
 - **Compact Working Memory**: Maintains a compressed explicit JSON state for session context.
-- **Token Savings Report**: Automatically calculates and prints a fun summary of how many tokens and minutes were saved at the end of each task!
 
 ## Installation & Usage
 
